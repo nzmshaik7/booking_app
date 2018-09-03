@@ -1,0 +1,40 @@
+<div class="Main_container">
+  <div class="Form_container">
+    <%= form_for :search, method: :get do |f| %>
+      <h3><%= f.label :to, 'To', class: "Label" %>
+      <%= f.collection_select :to, Airport.all, :id, :name, class: "Text_field", 
+          selected: !@search_result.blank? && @search_result.first.to.id %>
+      
+      <%= f.label :from, 'From', class: "Label" %>
+      <%= f.collection_select :from, Airport.all, :id, :name, class: "Text_field",
+          selected: !@search_result.blank? && @search_result.first.from.id %>
+      
+      <%= f.label :date, 'Date', class: "Label" %>
+      <%= f.collection_select :date, Flight.select(:date).group(:date), :date, :date,
+          class: "Text_field", selected: !@search_result.blank? && @search_result.first.date.to_s%>
+      
+      <%= f.label :passenger_num, 'Passengers', class: "Label" %>
+      <%= f.select :passenger_num, 1..4, class: "Text_field",
+          selected: !@search_result.blank? && @passengers_num %>
+      </h3>
+      <h3><%= f.submit "SEARCH", class: "Button" %></h3>
+    <% end %>
+
+    <% if !@search_result.blank? %>
+      <h2 class="Label" id="Title">AVAILABLE FLIGHTS</h2>
+      <%= form_for :flight_selection, url: new_booking_path, method: :get do |f| %>
+        <% @search_result.each do |flight| %>
+          
+            <%= f.label :flight, "#{flight.to.name} 
+                                  #{flight.from.name} 
+                                  #{flight.date}", class: "Radio_selection" %>
+            <%= f.radio_button :flight, flight.id, checked: true  %>
+            <br>
+            <br>
+        <% end %>
+        <%= f.hidden_field :passengers_num, value: @passengers_num %>
+        <%= f.submit "SUBMIT", class: "Button" %>
+      <% end %>
+    <% end %>
+  </div> 
+</div>

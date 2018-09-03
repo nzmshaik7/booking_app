@@ -1,0 +1,23 @@
+<div class="Main_container">
+  <div class="Form_container" id="Booking">
+    <%= form_for @booking do |f| %>
+      <%= f.hidden_field :flight, value: @booking.flight.id %>
+      <%= f.hidden_field :passengers_num, value: @passengers_num %>
+      <h3>
+        <%= f.label :flight, "#{@booking.flight.to.name} 
+                              #{@booking.flight.from.name} 
+                              #{@booking.flight.departure}", class: "Radio_selection" %>
+      </h3>
+      <% @passengers_num.to_i.times do |ind| %>
+        <%= fields_for :passengers, @booking.passenger do |passenger_fields| %>
+          <h3 class="Label">Passenger <%= ind+1 %></h3>
+          <h3>
+            <span class="Label">NAME</span><%= passenger_fields.text_field :"name#{ind+1}", class: "Text_field" %>
+            <span class="Label">EMAIL</span><%= passenger_fields.text_field :"email#{ind+1}", class: "Text_field" %>
+          </h3>
+        <% end %>
+      <% end %>
+      <h3><%= f.submit "CONFIRM", class: "Button" %></h3>
+    <% end %>
+  </div>
+</div>
